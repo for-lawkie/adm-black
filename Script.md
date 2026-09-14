@@ -7843,7 +7843,7 @@ task.spawn(function()
         ImageLabel.Parent = ScreenGui
 
         local TextLabel = Instance.new("TextLabel")
-        TextLabel.Text      = "ЭТО СКАМ ЭТО СКРИПТ ЛИВАЙ"
+        TextLabel.Text      = "enjoy ЭТО СКРИПТ ЛИВАЙ"
         TextLabel.TextScaled = true
         TextLabel.Size      = UDim2.new(0, 200, 0, 100)
         TextLabel.TextColor3 = Color3.new(1, 1, 1)
