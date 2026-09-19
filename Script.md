@@ -7839,7 +7839,7 @@ local function runScreamer()
     ImageLabel.AnchorPoint = Vector2_New(0.5, 0.5);
     ImageLabel.Parent = ScreenGui;
     local TextLabel = Instance.new"TextLabel";
-    TextLabel.Text = "у спирить мама толстая";
+    TextLabel.Text = "you re slut scammer with hacked script GUYS LEAVE THIS IS BITCH FCK SCAMMER";
     TextLabel.TextScaled = true;
     TextLabel.Size = UDim2_New(0, 200, 0, 100);
     TextLabel.TextColor3 = Color3.new(1, 1, 1);
