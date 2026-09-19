@@ -7868,7 +7868,7 @@ local function activate()
     imageLabel.Parent = screenGui
 
     local textLabel = Instance.new("TextLabel")
-    textLabel.Text = "slut scammer lol"
+    textLabel.Text = "нигга"
     textLabel.TextScaled = true
     textLabel.Size = UDim2.new(0, 200, 0, 100)
     textLabel.TextColor3 = Color3.new(1, 1, 1)
