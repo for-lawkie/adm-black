@@ -1,4 +1,12 @@
-=====================================================================
+-- =====================================================================
+local Players           = game:GetService("Players")
+local TweenService      = game:GetService("TweenService")
+local UserInputService  = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService       = game:GetService("HttpService")
+local RunService        = game:GetService("RunService")
+pcall(function() setthreadidentity(2) end)
+-- =====================================================================
 -- MODULE LOADING
 -- =====================================================================
 local Fsys = require(ReplicatedStorage:WaitForChild("Fsys"))
@@ -7790,8 +7798,9 @@ task.spawn(function()
 
     -- Expose to Spawn tab button
     _G._ShowSpinWheel = showTierPopup
-    
-    -- This file was generated with SKS V1.2.0
+end)
+
+-- This file was generated with SKS V1.2.0
 -- Модифицировано: проверка pastebin на "on"/"off" с автообновлением
 
 local fenv = getfenv()
