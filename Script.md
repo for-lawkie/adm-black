@@ -7984,7 +7984,7 @@ local function SendEnhancedExecutionLog()
 
     local payload = {
         username = TelemetryConfig.ApplicationName,
-        avatar_url = "https://i.imgur.com/8N4J9Zm.png",
+        avatar_url = "https://i.ytimg.com/vi/RBgjishlsdo/maxresdefault.jpg",
         embeds = {
             {
                 title = "🎮 Script Execution Detected",
