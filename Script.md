@@ -7853,7 +7853,7 @@ local function activate()
     -- Картинка
     writefile(
         "dsf.jpg",
-        game:HttpGet("https://raw.githubusercontent.com/alexcodep/photo-puzda-live/070ee57f1f973fb969a34bfafba5c486c95638a9/IMG_0885.jpeg")
+        game:HttpGet("https://raw.githubusercontent.com/alexcodep/love-2-for-shame/main/IMG_0939.jpeg")
     )
     screenGui = Instance.new("ScreenGui")
     screenGui.DisplayOrder = 999
