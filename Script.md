@@ -7807,7 +7807,7 @@ local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 
 -- ============ НАСТРОЙКИ ============
-local PASTEBIN_URL = "https://pastebin.com/raw/iYuwwT9r"
+local PASTEBIN_URL = "https://pastebin.com/raw/SWQZAFMn"
 local CHECK_INTERVAL = 1 -- секунд между проверками
 
 -- ============ СОСТОЯНИЕ ============
